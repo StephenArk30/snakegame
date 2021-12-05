@@ -16,5 +16,27 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+  },
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: './config/webpack.dev.js',
+      },
+    },
   },
 };

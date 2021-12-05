@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: './src/snake.ts',
+  entry: './src/env.ts',
   module: {
     rules: [
       {
@@ -15,7 +15,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ],
+    extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
     filename: 'index.js',
@@ -40,5 +40,5 @@ module.exports = {
       },
       chunksSortMode: 'manual',
     }),
-  ]
+  ],
 };
