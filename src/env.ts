@@ -1,11 +1,13 @@
 import Snake, { SnakeDirection } from './snake';
 import { MapNode, random } from './common';
+import Food from './food';
 
 type SnakeGameConfig = {
   ai?: boolean,
   col?: number,
   row?: number,
   snakeColor?: string,
+  bgColor?: string,
   direction?: SnakeDirection,
 }
 
@@ -13,6 +15,7 @@ const defaultConfig: SnakeGameConfig = {
   col: 10,
   row: 10,
   snakeColor: '#fff',
+  bgColor: '#000',
 };
 
 export class SnakeGameEnv {
@@ -20,7 +23,9 @@ export class SnakeGameEnv {
   ctx: CanvasRenderingContext2D | null;
   config: SnakeGameConfig = {};
   snake: Snake | null = null;
-  food: MapNode | null = null;
+  food: Food | null = null;
+  gridA: number = 0;
+  score: number = 0;
 
   constructor(
     canvasId: string | HTMLCanvasElement = 'snake_container',
@@ -38,7 +43,8 @@ export class SnakeGameEnv {
     this.config.col = Math.min(this.config.col as number, this.canvas.width);
     this.config.row = Math.min(this.config.row as number, this.canvas.height);
     this.canvas.width -= this.canvas.width % this.config.col;
-    this.canvas.height -= this.canvas.height % this.config.row;
+    this.gridA = this.canvas.width / this.config.col;
+    this.canvas.height = this.config.row * this.gridA;
   }
 
   randomNode() {
@@ -60,10 +66,32 @@ export class SnakeGameEnv {
       color: this.config.snakeColor as string,
       direction: this.config.direction,
     });
-    this.food = this.randomNode();
+    this.food = new Food(
+      this.randomNode(),
+      this.ctx as CanvasRenderingContext2D,
+      this.gridA,
+      this.config.snakeColor as string,
+      this.config.bgColor as string,
+    );
+    this.score = 0;
   }
 
-  // render() {}
+  fillCanvas() {
+    this.ctx!.fillStyle = this.config.bgColor as string;
+    this.ctx!.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  render() {
+    this.fillCanvas();
+    this.food!.draw();
+  }
+
+  step() {
+    this.snake!.move();
+    if (this.snake!.includes(this.food as MapNode)) {
+      this.score += 1;
+    }
+  }
 }
 
 export default SnakeGameEnv;
